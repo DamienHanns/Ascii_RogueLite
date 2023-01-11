@@ -10,6 +10,8 @@ class NumberGenerator
 private:
     int _seed = 0; 
 
+    //get seed from user input
+
     void caluclateSeed(std::string seedInput){
 
         const char* inputCharArray = seedInput.data();
@@ -18,8 +20,6 @@ private:
         {
             _seed += int(inputCharArray[i]);
         }
-
-        std::cout << "seed: " << _seed << std::endl;
 
         srand(_seed);
     }
@@ -34,15 +34,8 @@ public:
     }
 
 
-    NumberGenerator(std::string);
+    NumberGenerator(std::string seedInput) {caluclateSeed(seedInput); };
     
 };
-
-NumberGenerator::NumberGenerator(std::string seedInput)
-{
-    caluclateSeed(seedInput);
-}
-
-
 
 #endif
