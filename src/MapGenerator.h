@@ -1,5 +1,5 @@
-#ifndef MapGENERATOR_H
-#define MapGENERATOR_H
+#ifndef MAPGENERATOR_H
+#define MAPGENERATOR_H
 
 #include <iostream>
 #include <string>
@@ -35,8 +35,11 @@ private:
     NumberGenerator& _numberGenerator;
 
 public:
-    void generateLevel();
-    void displayLevel();
+    std::vector <std::string> generateMap();
+
+    void displayMap();
+
+    std::vector<std::string> getGeneratedMap(){ return _generatedMap; };
 
     MapGenerator(NumberGenerator& numberGenerator) : _numberGenerator (numberGenerator){};
 };

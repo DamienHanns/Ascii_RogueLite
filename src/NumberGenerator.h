@@ -33,7 +33,6 @@ public:
         return rand() % (max + 1 - min) + min;
     }
 
-
     NumberGenerator(std::string seedInput) {caluclateSeed(seedInput); };
     
 };

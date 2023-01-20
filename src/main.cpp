@@ -4,9 +4,11 @@
 
 #include "MapGenerator.h"
 #include "NumberGenerator.h"
+#include "GameMaster.h"
 
 
 int main(){
+    //setup game
     std::string _inputForSeed;
 
     std::cout << "A new hero arrives." << std::endl;
@@ -14,11 +16,16 @@ int main(){
 
     std::cin >> _inputForSeed;
 
-    NumberGenerator _numberGenerator(_inputForSeed);
-    MapGenerator _levelGen(_numberGenerator);
+    NumberGenerator _numberGenerator (_inputForSeed);
+    MapGenerator _mapGenerator (_numberGenerator);
 
-    _levelGen.generateLevel();
-    _levelGen.displayLevel();
+    GameMaster gM(_numberGenerator, _mapGenerator);
+
+    gM.setupGame();
+
+    gM.runGame();
+
+    //run game
     
 
     return 0;

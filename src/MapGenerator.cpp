@@ -4,11 +4,13 @@
 //start with left column initialising number of rows-
 //add to initialise rows with middle and right column call
 
-void MapGenerator::generateLevel(){
+std::vector<std::string> MapGenerator::generateMap(){
     generateLeftColumn();
     generateMiddleColumn();
     generateMiddleColumn();
     generateRightColumn();
+
+    return _generatedMap;
 }
 
 //return a path to a randomly chosen level chunk from dir
@@ -158,7 +160,7 @@ void MapGenerator::generateRightColumn(){
     }
 }
 
-void MapGenerator::displayLevel(){
+void MapGenerator::displayMap(){
     for (int i = 0; i < _generatedMap.size(); i++)
         {
             std::cout << _generatedMap[i] << std::endl;
