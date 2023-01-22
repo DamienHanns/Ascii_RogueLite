@@ -8,10 +8,11 @@
 #include <filesystem>
 #include "NumberGenerator.h"
 
+
 class MapGenerator
 {
 private:
-    // tile directory locations
+    // chunk directory locations
     std::string _topLeftPath = "./LevelChunks/Left/Top";
     std::string _middleLeftPath = "./LevelChunks/Left/Middle";
     std::string _bottomLeftPath = "./LevelChunks/Left/Bottom";
@@ -39,10 +40,19 @@ public:
 
     void displayMap();
 
-    std::vector<std::string> getGeneratedMap(){ return _generatedMap; };
+    std::vector<std::string> getGeneratedMap(){ return _generatedMap; };  
 
     MapGenerator(NumberGenerator& numberGenerator) : _numberGenerator (numberGenerator){};
 };
+
+struct MapConstituents
+{
+    int chunkSizeX = 10;
+    int chunkSizeY = 5; 
+    int coloums = 4; 
+    int rows = 3;
+};
+
 
 
 #endif

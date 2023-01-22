@@ -6,19 +6,10 @@
 
 #include "MapGenerator.h"
 #include "NumberGenerator.h"
+#include "Entity.h"
 
 
 class GameMaster{
-
-struct Position{
-    int x, y;
-    int getX() { return x;} int getY() { return y;}
-};
-
-struct Player {
-    Position position;
-    char sym = 'P';
-} _player;
 
 private:
     bool _gameRunning;
@@ -26,6 +17,9 @@ private:
     NumberGenerator& _numberGenerator;
     MapGenerator& _mapGenerator;
 
+    Player _player;
+
+    std::vector <Zombie> _zombies;
     std::vector <std::string> _levelMap;
 
     void processInput();
@@ -33,9 +27,10 @@ private:
     void displayLevel();
     void displayInstructions();
 
-    void placeEntites();
+    void placeEntitesOnMap();
+    bool testMapPosition(int xPos, int yPos);
 
-    void moveOrCollide(Position& startingPosition, int desiredXPos, int desiredYPos);
+    bool move(int& startingX, int& startingY, int desiredXPos, int desiredYPos);
 
 public:
 

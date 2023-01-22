@@ -1,9 +1,37 @@
 #include "GameMaster.h"
 
+//setout map 
+//find spawn positions and spawn in entities at those positions
 void GameMaster::setupGame(){
-    _player.position.x = _player.position.y = 1;
+    system("clear");
+    
     _levelMap = _mapGenerator.generateMap();
-    updateEntities();
+
+    MapConstituents mapConstituents;
+
+    //spawn zombies
+    for (int i = 0; i < _numberGenerator.getIntRanged(30, 20); i++)
+    {
+        Zombie z;
+        
+        int maxXPos = mapConstituents.chunkSizeX * mapConstituents.coloums;
+        int maxYPos = mapConstituents.chunkSizeY * mapConstituents.rows;
+        
+        bool bHasSpawnPosition = false;
+        
+        while (bHasSpawnPosition == false)
+        {
+            z._x = _numberGenerator.getIntRanged(maxXPos, mapConstituents.chunkSizeX);
+            z._y = _numberGenerator.getIntRanged(maxYPos, mapConstituents.chunkSizeY); 
+            
+            bHasSpawnPosition = testMapPosition(z._x, z._y);
+        }
+        
+        _zombies.push_back(z);
+
+        placeEntitesOnMap();
+    }
+
     displayLevel();  
 }
 
@@ -31,20 +59,16 @@ void GameMaster::processInput(){
             _gameRunning = false;
             break;
         case 'w':
-            moveOrCollide(_player.position, _player.position.x, _player.position.getY() - 1);
-            //_player._posY --;
+            move(_player._x, _player._y, _player._x, _player._y - 1);
             break;
         case 's':
-            moveOrCollide(_player.position, _player.position.x, _player.position.getY() + 1);
-            //_player._posY ++;
+            move(_player._x, _player._y, _player._x, _player._y + 1);
             break;
         case 'a':
-            moveOrCollide(_player.position, _player.position.getX() - 1, _player.position.getY());
-            //_player._posX --;
+            move(_player._x, _player._y, _player._x - 1, _player._y);
             break;
         case 'd':
-            moveOrCollide(_player.position, _player.position.getX() + 1, _player.position.getY());
-            //_player._posX ++;
+            move(_player._x, _player._y, _player._x + 1, _player._y);
         default:
             break;
         }
@@ -55,28 +79,44 @@ void GameMaster::updateEntities(){
     system("clear");
     _levelMap = _mapGenerator.getGeneratedMap();
 
-    placeEntites();
+    //call Act on entities.
+
+    placeEntitesOnMap();
 }
 
-//check the symbol at the desired position in the level. 
-//If the symbol is a '.' update entity postion.
-void GameMaster::moveOrCollide(Position& entityPosition, int desiredXPos, int desiredYPos){
-    char levelSymbol;
-
-    std::string& value = _levelMap[desiredYPos];
-    levelSymbol = value[desiredXPos];
-
-    if (levelSymbol == '.'){ 
-        entityPosition.x = desiredXPos;
-        entityPosition.y = desiredYPos;
+bool GameMaster::move(int& posX, int& posY,  int desiredXPos, int desiredYPos){
+    
+    if ( testMapPosition(desiredXPos, desiredYPos) ){ 
+        posX = desiredXPos;
+        posY = desiredYPos;
+        return true;
     }
+    else return false;
 }
 
 //after all positions have been updated place entites on map
 //start with _player then place other entities
-void GameMaster::placeEntites(){
-    std::string& value = _levelMap[_player.position.getY()];
-    value [_player.position.getX()] = _player.sym;
+void GameMaster::placeEntitesOnMap(){
+    std::string& playerY = _levelMap[_player._y];
+    playerY [_player._x] = _player.sym;
+
+    for(Zombie& z : _zombies){
+       std::string& zombieYPos = _levelMap[z._y];
+       zombieYPos [z._x] = z.sym;
+    }
+}
+
+bool GameMaster::testMapPosition(int xPos, int yPos){
+
+    bool bPositionAvailible;
+    char mapSymbol;
+
+    std::string& value = _levelMap[yPos];
+    mapSymbol = value [xPos];
+    
+    mapSymbol == '.' ? bPositionAvailible = true : bPositionAvailible = false;
+
+    return bPositionAvailible;
 }
 
 void GameMaster::displayLevel(){

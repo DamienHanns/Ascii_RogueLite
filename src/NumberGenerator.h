@@ -8,9 +8,8 @@
 class NumberGenerator
 {
 private:
-    int _seed = 0; 
-
-    //get seed from user input
+    //seed generated from user input
+    int _seed = 0;     
 
     void caluclateSeed(std::string seedInput){
 
