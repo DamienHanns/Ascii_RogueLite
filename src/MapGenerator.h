@@ -50,7 +50,4 @@ struct MapConstituents
     int coloums = 4; 
     int rows = 3;
 };
-
-
-
 #endif

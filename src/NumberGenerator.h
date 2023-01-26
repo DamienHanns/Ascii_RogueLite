@@ -16,8 +16,7 @@ private:
         const char* inputCharArray = seedInput.data();
 
         for (size_t i = 0; i < seedInput.size(); i++)
-        {
-            
+        {   
             _seed += int(inputCharArray[i]);
         }
 
