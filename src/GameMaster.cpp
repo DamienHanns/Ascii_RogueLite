@@ -2,15 +2,20 @@
 
 //setout map 
 //find spawn positions and spawn in entities at those positions
+//_zobies.at() and related setup code used for placement as push_back() caused
+// inconsistant - Memory Segmentaion Fault - Not sure why.
 void GameMaster::setupGame(){
     system("clear");
-    
+
     _levelMap = _mapGenerator.generateMap();
 
     MapConstituents mapConstituents;
 
     //spawn zombies
-    for (int i = 0; i < _numberGenerator.getIntRanged(30, 20); i++)
+    int totalZombies =  NumberGenerator::getIntRanged(30, 20);
+    _zombies.resize(totalZombies);
+
+    for (int i = 0; i < totalZombies; i++)
     {
         Zombie z;
         
@@ -21,18 +26,21 @@ void GameMaster::setupGame(){
         
         while (bHasSpawnPosition == false)
         {
-            z._x = _numberGenerator.getIntRanged(maxXPos, mapConstituents.chunkSizeX);
-            z._y = _numberGenerator.getIntRanged(maxYPos, mapConstituents.chunkSizeY); 
+            z._x = NumberGenerator::getIntRanged(maxXPos, mapConstituents.chunkSizeX);
+            z._y = NumberGenerator::getIntRanged(maxYPos, mapConstituents.chunkSizeY); 
             
-            bHasSpawnPosition = testMapPosition(z._x, z._y);
+            bHasSpawnPosition = _moveSystem.testMapPosition(z._x, z._y, _levelMap);
         }
-        
-        _zombies.push_back(z);
+
+        _zombies.at(i) = z;
 
         placeEntitesOnMap();
-    }
+    } 
 
-    displayLevel();  
+    //clear and populate map again to get rid of entity at pos (0,0)
+    _levelMap = _mapGenerator.getGeneratedMap();
+    placeEntitesOnMap();
+    displayLevel();
 }
 
 void GameMaster::runGame(){
@@ -59,43 +67,32 @@ void GameMaster::processInput(){
             _gameRunning = false;
             break;
         case 'w':
-            move(_player._x, _player._y, _player._x, _player._y - 1);
+            _moveSystem.move(_player._x, _player._y, _player._x, _player._y - 1, _levelMap, _player.sym);
             break;
         case 's':
-            move(_player._x, _player._y, _player._x, _player._y + 1);
+            _moveSystem.move(_player._x, _player._y, _player._x, _player._y + 1, _levelMap, _player.sym);
             break;
         case 'a':
-            move(_player._x, _player._y, _player._x - 1, _player._y);
+            _moveSystem.move(_player._x, _player._y, _player._x - 1, _player._y, _levelMap, _player.sym);
             break;
         case 'd':
-            move(_player._x, _player._y, _player._x + 1, _player._y);
+            _moveSystem.move(_player._x, _player._y, _player._x + 1, _player._y, _levelMap, _player.sym);
         default:
             break;
         }
     }
 }
 
+//pass _levelMap into Act() for AI functions
 void GameMaster::updateEntities(){
     system("clear");
-    _levelMap = _mapGenerator.getGeneratedMap();
 
-    //call Act on entities.
-
-    placeEntitesOnMap();
-}
-
-bool GameMaster::move(int& posX, int& posY,  int desiredXPos, int desiredYPos){
-    
-    if ( testMapPosition(desiredXPos, desiredYPos) ){ 
-        posX = desiredXPos;
-        posY = desiredYPos;
-        return true;
+    for(Zombie& z : _zombies){
+        z.Act(_levelMap);
     }
-    else return false;
 }
 
-//after all positions have been updated place entites on map
-//start with _player then place other entities
+//place entities on level map starting with _player
 void GameMaster::placeEntitesOnMap(){
     std::string& playerY = _levelMap[_player._y];
     playerY [_player._x] = _player.sym;
@@ -106,21 +103,8 @@ void GameMaster::placeEntitesOnMap(){
     }
 }
 
-bool GameMaster::testMapPosition(int xPos, int yPos){
-
-    bool bPositionAvailible;
-    char mapSymbol;
-
-    std::string& value = _levelMap[yPos];
-    mapSymbol = value [xPos];
-    
-    mapSymbol == '.' ? bPositionAvailible = true : bPositionAvailible = false;
-
-    return bPositionAvailible;
-}
-
 void GameMaster::displayLevel(){
-    for (int i = 0; i < _levelMap.size(); i++)
+    for (size_t i = 0; i < _levelMap.size(); i++)
     {
         std::cout << _levelMap[i] << std::endl;
     }
@@ -133,6 +117,3 @@ void GameMaster::displayInstructions(){
     std::cout << "Plan your movement with w,a,s,d - then press Enter " << "\n";
     std::cout << "To quit input x - then press Enter" << std::endl;
 }
-
-GameMaster::GameMaster(NumberGenerator& numberGenerator, MapGenerator& mapGenerator) : 
-    _numberGenerator(numberGenerator), _mapGenerator(mapGenerator)   {};

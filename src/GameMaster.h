@@ -3,24 +3,27 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 
 #include "MapGenerator.h"
 #include "NumberGenerator.h"
 #include "Entity.h"
-
+#include "MovementSystem.h"
 
 class GameMaster{
 
 private:
     bool _gameRunning;
 
-    NumberGenerator& _numberGenerator;
-    MapGenerator& _mapGenerator;
+    MapGenerator _mapGenerator;
+    MovementSystem _moveSystem;
 
     Player _player;
 
     std::vector <Zombie> _zombies;
     std::vector <std::string> _levelMap;
+    std::vector <std::string> _levelMapPreviousTurn; 
+
 
     void processInput();
     void updateEntities();
@@ -28,17 +31,14 @@ private:
     void displayInstructions();
 
     void placeEntitesOnMap();
-    bool testMapPosition(int xPos, int yPos);
-
-    bool move(int& startingX, int& startingY, int desiredXPos, int desiredYPos);
 
 public:
-
     void setupGame();
     void runGame();
 
-    GameMaster(NumberGenerator& numberGenerator, MapGenerator& mapGenerator);
+    GameMaster() {} ;
 };
+
 
 
 

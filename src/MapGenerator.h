@@ -33,8 +33,6 @@ private:
 
     std::string selectLevelTile(std::string pathToTiles);
 
-    NumberGenerator& _numberGenerator;
-
 public:
     std::vector <std::string> generateMap();
 
@@ -42,7 +40,7 @@ public:
 
     std::vector<std::string> getGeneratedMap(){ return _generatedMap; };  
 
-    MapGenerator(NumberGenerator& numberGenerator) : _numberGenerator (numberGenerator){};
+    MapGenerator() {};
 };
 
 struct MapConstituents

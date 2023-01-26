@@ -1,5 +1,5 @@
 build:
-	g++ -std=c++17 ./src/*.cpp  -Wall -o ./main.o
+	g++ -std=c++17 ./src/*.cpp  -Wall -Wextra -o ./main.o
 
 run:
 	./main.o

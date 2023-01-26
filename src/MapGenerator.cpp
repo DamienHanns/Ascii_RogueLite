@@ -25,7 +25,7 @@ std::string MapGenerator::selectLevelTile(std::string pathToTiles){
         tilePaths.push_back(value.path());
     }
     
-    int randomIndex = _numberGenerator.getIntRanged((tilePaths.size() - 1)); 
+    int randomIndex = NumberGenerator::getIntRanged((tilePaths.size() - 1)); 
 
     return tilePaths[randomIndex];
 }
@@ -161,8 +161,8 @@ void MapGenerator::generateRightColumn(){
 }
 
 void MapGenerator::displayMap(){
-    for (int i = 0; i < _generatedMap.size(); i++)
-        {
-            std::cout << _generatedMap[i] << std::endl;
-        }
+    for (size_t i = 0; i < _generatedMap.size(); i++)
+    {
+        std::cout << _generatedMap[i] << std::endl;
+    }
 }

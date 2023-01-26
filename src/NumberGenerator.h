@@ -15,24 +15,27 @@ private:
 
         const char* inputCharArray = seedInput.data();
 
-        for (int i = 0; i < seedInput.size(); i++)
+        for (size_t i = 0; i < seedInput.size(); i++)
         {
+            
             _seed += int(inputCharArray[i]);
         }
+
+        std::cout << "total seed input: " << seedInput << std::endl;
 
         srand(_seed);
     }
 
 public:
 
-    int getIntRanged (int max, int min = 0){
+    static int getIntRanged (int max, int min = 0){
         if (min > max) 
         { std::cerr << "ERROR in RNG. MIN too high. Setting MIN to 0 " << "\n";}
 
         return rand() % (max + 1 - min) + min;
     }
 
-    NumberGenerator(std::string seedInput) {caluclateSeed(seedInput); };
+    NumberGenerator(std::string seedInput) {caluclateSeed(seedInput);};
     
 };
 
