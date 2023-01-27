@@ -89,6 +89,8 @@ void GameMaster::placeEntitesOnMap(){
 void GameMaster::runGame(){
     _gameRunning = true;
 
+    displayInformation();
+
     while (_gameRunning)
     {
         processPlayerInput();
@@ -188,17 +190,20 @@ void GameMaster::displayInformation(){
     }
     else {
         if (_gameNotWon == false) {   
+            std::cout << " #############################" << std::endl;
             std::cout << " - - - Well done you won - - -" << std::endl;
             std::cout << " - - Thank you for playing - -" << std::endl;
+            std::cout << " #############################" << std::endl;
             return;
         }
         if (_playerAlive) {
             std::cout << " - - Thank you for playing - -" << std::endl;
         }
         else {
-            std::cout << " - - - -  Game Over  - - - -" << std::endl;
+            std::cout << " ###########################" << std::endl;
             std::cout << " A Zombie got you. Bad luck." << std::endl;
             std::cout << " - - - -  Game Over  - - - -" << std::endl;
+            std::cout << " ###########################" << std::endl;
         }
     }
 }
